@@ -9,6 +9,7 @@
         public static string SuccessDeleteToken = "Token has been successfully deleted.";
         public static string SuccessForgotPassword = "Password reset request was successful. Please check your email inbox.";
         public static string SuccessResetPassword = "Password has been successfully reset. You can now log in with your new password.";
+        public static string SuccessRegister = "Your registration has been successfully completed. You can log in to the system by entering your information.";
 
         /* Wrong Messages */
         public static string WrongLogin = "Login information is incorrect.";

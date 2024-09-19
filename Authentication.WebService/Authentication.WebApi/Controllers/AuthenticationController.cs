@@ -82,6 +82,18 @@ namespace Authentication.WebApi.Controllers
 
         #region SWAGGER DOCUMENT
         [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CustomApiResponse<UserDto.UserGetDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CustomApiResponse<NoData>))]
+        #endregion
+        [HttpPost("Register")]
+        public async Task<IActionResult> RegisterAsync([FromBody] UserDto.UserRegisterDto dto)
+        {
+            var response = await _authenticationService.RegisterAsync(dto);
+            return SendResponse(response);
+        }
+
+        #region SWAGGER DOCUMENT
+        [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CustomApiResponse<TokenDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(CustomApiResponse<NoData>))]
         #endregion

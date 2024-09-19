@@ -38,6 +38,28 @@ namespace Authentication.Business.BusinessRules
             }
         }
 
+        public async Task AddUniqueControlAsync(UserDto.UserRegisterDto dto)
+        {
+            var errorList = new List<string>();
+            if (await _userRepository.AnyAsync(prd => prd.UserName.ToLower() == dto.UserName.ToLower(), false, false))
+            {
+                errorList.Add(UserMessages.ExistsUserName);
+            }
+            if (await _userRepository.AnyAsync(prd => prd.Phone == dto.Phone, false, false))
+            {
+                errorList.Add(UserMessages.ExistsPhone);
+            }
+            if (await _userRepository.AnyAsync(prd => prd.Email.ToLower() == dto.Email.ToLower(), false, false))
+            {
+                errorList.Add(UserMessages.ExistsEmail);
+            }
+            if (errorList != null && errorList.Count > 0)
+            {
+                var message = string.Join(" - ", errorList);
+                throw new ValidationException(message);
+            }
+        }
+
         public async Task UpdateUniqueControlAsync(UserDto.UserPutDto dto)
         {
             var errorList = new List<string>();

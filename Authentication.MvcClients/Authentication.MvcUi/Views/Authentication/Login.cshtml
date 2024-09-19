@@ -1,0 +1,64 @@
+﻿﻿﻿@{
+    Layout = "~/Views/Shared/_AuthenticationLayout.cshtml";
+    ViewBag.Title = "Log In!";
+}
+
+@section customStyles {
+
+}
+
+@section customScripts {
+
+}
+
+<div class="row w-100 h-100 m-0">
+    <!-- left menu start -->
+    <div class="col h-100 img-container">
+        <img src="~/images/authentication/login.png" class="h-100 w-100" alt="Log In">
+    </div>
+    <!-- left menu end -->
+
+    <!-- right menu start -->
+    <div class="col d-flex align-items-center">
+        <form name="loginForm" class="w-100">
+            <div class="text-center">
+                <img src="~/images/logo.png" width="250" alt="Logo">
+            </div>
+            <h2>Log In!</h2>
+            <p class="lead fst-italic text-secondary fs-6 opacity-75">Please enter your account information to log in...</p>
+
+            <!-- userNameOrEmail start -->
+            <div class="form-group">
+                <label for="userNameOrEmail" class="form-label">Username or Email Address</label>
+                <div class="input-group flex-nowrap">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    <input type="text" id="userNameOrEmail" class="form-control" name="userNameOrEmail" placeholder="Please enter your username or email address..." autocomplete="off" required>
+                </div>
+            </div>
+            <!-- userNameOrEmail end -->
+
+            <!-- password start -->
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group flex-nowrap">
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <input type="password" id="password" class="form-control" name="password" placeholder="Please enter your password..." autocomplete="off" required>
+                </div>
+            </div>
+            <!-- password end -->
+
+            <div class="form-group">
+                <input type="checkbox" id="forgot-password" class="form-check-input" />
+                <label for="forgot-password">Forgot My Password!</label>
+            </div>
+
+            <!-- buttons start -->
+            <div class="button-group d-flex gap-2 my-2">
+                <button type="button" id="btn-login" class="btn btn-primary w-50">Log In!</button>
+                <a href="~/Authentication/Register" class="btn btn-danger w-50">Sign Up!</a>
+            </div>
+            <!-- buttons end -->
+        </form>
+    </div>
+    <!-- right menu end -->
+</div>

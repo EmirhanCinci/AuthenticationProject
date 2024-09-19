@@ -1,0 +1,111 @@
+﻿@{
+    Layout = "~/Views/Shared/_AuthenticationLayout.cshtml";
+    ViewBag.Title = "Sign Up!";
+}
+
+@section customStyles {
+
+}
+
+@section customScripts {
+
+}
+
+<div class="row w-100 h-100 m-0">
+    <!-- left menu start -->
+    <div class="col h-100 img-container">
+        <img src="~/images/authentication/login.png" class="h-100 w-100" alt="Sign In">
+    </div>
+    <!-- left menu end -->
+
+    <!-- right menu start -->
+    <div class="col d-flex align-items-center">
+        <form name="registerForm" class="w-100">
+            <div class="text-center">
+                <img src="~/images/logo.png" height="150" width="250" alt="Logo">
+            </div>
+            <h2>Sign Up!</h2>
+            <p class="lead fst-italic text-secondary fs-6 opacity-75">Fill in your details to create an account...</p>
+
+            <div class="row">
+                <!-- userName start -->
+                <div class="form-group my-1">
+                    <label for="userName" class="form-label">Your Username (<span class="text-danger">*</span>)</label>
+                    <div class="input-group flex-nowrap">
+                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <input type="text" id="userName" class="form-control" name="userName" placeholder="Please choose a username..." autocomplete="off" required>
+                    </div>
+                </div>
+                <!-- userName end -->
+
+                <!-- firstName start -->
+                <div class="col-6 form-group my-2">
+                    <label for="firstName" class="form-label">First Name (<span class="text-danger">*</span>)</label>
+                    <div class="input-group flex-nowrap">
+                        <span class="input-group-text"><i class="bi bi-person-vcard"></i></span>
+                        <input type="text" id="firstName" class="form-control" name="firstName" placeholder="Please enter your first name..." autocomplete="off" required>
+                    </div>
+                </div>
+                <!-- firstName end -->
+
+                <!-- lastName start -->
+                <div class="col-6 form-group my-2">
+                    <label for="lastName" class="form-label">Last Name (<span class="text-danger">*</span>)</label>
+                    <div class="input-group flex-nowrap">
+                        <span class="input-group-text"><i class="bi bi-person-vcard"></i></span>
+                        <input type="text" id="lastName" class="form-control" name="lastName" placeholder="Please enter your last name..." autocomplete="off" required>
+                    </div>
+                </div>
+                <!-- lastName end -->
+
+                <!-- email start -->
+                <div class="col-6 form-group my-2">
+                    <label for="email" class="form-label">Email Address (<span class="text-danger">*</span>)</label>
+                    <div class="input-group flex-nowrap">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input type="email" id="email" class="form-control" name="email" placeholder="Please enter your email address..." autocomplete="off" required>
+                    </div>
+                </div>
+                <!-- email end -->
+
+                <!-- phone start -->
+                <div class="col-6 form-group my-2">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <div class="input-group flex-nowrap">
+                        <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                        <input type="text" id="phone" class="form-control" name="phone" placeholder="Please enter your phone number..." autocomplete="off">
+                    </div>
+                </div>
+                <!-- phone end -->
+
+                <!-- password start -->
+                <div class="col-6 form-group my-2">
+                    <label for="password" class="form-label">Password (<span class="text-danger">*</span>)</label>
+                    <div class="input-group flex-nowrap">
+                        <span class="input-group-text"><i class="bi bi-person-lock"></i></span>
+                        <input type="password" id="password" class="form-control" name="password" placeholder="Please choose a password..." autocomplete="off" required>
+                    </div>
+                </div>
+                <!-- password end -->
+
+                <!-- control-password start -->
+                <div class="col-6 form-group my-2">
+                    <label for="controlPassword" class="form-label">Confirm Password (<span class="text-danger">*</span>)</label>
+                    <div class="input-group flex-nowrap">
+                        <span class="input-group-text"><i class="bi bi-key"></i></span>
+                        <input type="password" id="controlPassword" class="form-control" name="controlPassword" placeholder="Please confirm your password..." autocomplete="off" required>
+                    </div>
+                </div>
+                <!-- control-password end -->
+            </div>
+
+            <!-- buttons start -->
+            <div class="button-group d-flex gap-2 my-3">
+                <button type="button" id="btn-register" class="btn btn-primary w-50">Sign Up!</button>
+                <a href="~/Authentication/Login" class="btn btn-danger w-50"><i class="bi bi-arrow-left-circle"></i> Sign In!</a>
+            </div>
+            <!-- buttons end -->
+        </form>
+    </div>
+    <!-- right menu end -->
+</div>

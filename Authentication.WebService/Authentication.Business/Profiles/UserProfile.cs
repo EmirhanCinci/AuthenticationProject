@@ -12,6 +12,7 @@ namespace Authentication.Business.Profiles
             CreateMap<User, UserDto.UserGetDto>();
             CreateMap<Paginate<User>, Paginate<UserDto.UserGetDto>>().ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items));
             CreateMap<UserDto.UserPostDto, User>();
+            CreateMap<UserDto.UserRegisterDto, User>();
             CreateMap<UserDto.UserPutDto, User>();
         }
     }

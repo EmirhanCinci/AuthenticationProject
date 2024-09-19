@@ -1,0 +1,21 @@
+﻿.form-group {
+    margin: 15px 0px;
+}
+
+@media (max-width: 800px) {
+    .img-container {
+        display: none;
+    }
+
+    #forgot-password-form {
+        padding-left: 20px;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .button-group .btn {
+        width: 100% !important;
+    }
+}

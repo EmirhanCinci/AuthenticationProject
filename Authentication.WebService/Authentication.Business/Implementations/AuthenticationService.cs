@@ -1,6 +1,7 @@
 ﻿using Authentication.Business.BusinessRules;
 using Authentication.Business.Constants;
 using Authentication.Business.Interfaces;
+using Authentication.Business.Profiles;
 using Authentication.Business.Utilities.Email;
 using Authentication.Business.Utilities.Security.Dtos;
 using Authentication.Business.Utilities.Security.Interfaces;
@@ -124,6 +125,23 @@ namespace Authentication.Business.Implementations
             }
             await _unitOfWork.CommitAsync();
             return CustomApiResponse<TokenDto>.Success(StatusCodes.Status200OK, token, AuthenticationMessages.SuccessLogin);
+        }
+
+        [ValidationAspect(typeof(UserDtoValidator.UserRegisterDtoValidator))]
+        public async Task<CustomApiResponse<UserDto.UserGetDto>> RegisterAsync(UserDto.UserRegisterDto dto)
+        {
+            await _userBusinessRules.AddUniqueControlAsync(dto);
+            var user = CustomObjectMapper.Mapper.Map<User>(dto);
+            user.FirstName = dto.FirstName.ToTitleCase();
+            user.LastName = dto.LastName.ToUpper();
+            (user.PasswordHash, user.PasswordSalt) = PasswordHelper.CreatePasswordByHmacSha512(dto.Password);
+            var inserted = await _userRepository.AddAsync(user);
+            await _passwordHistoryRepository.AddAsync(new PasswordHistory { UserId = inserted.Id, PasswordHash = inserted.PasswordHash, PasswordSalt = inserted.PasswordSalt });
+            var mailResponse = await _emailService.SendEmailAsync(new EmailDto.EmailPostDto { ReceiverEmail = dto.Email, Subject = EmailTemplate.PasswordTitle, Body = EmailTemplate.RegisterEmailTemplate(user.FirstName, user.LastName) });
+            var result = mailResponse.IsSuccess ? true : throw new Exception(SystemMessages.InternalServerError);
+            await _unitOfWork.CommitAsync();
+            var mappedDto = CustomObjectMapper.Mapper.Map<UserDto.UserGetDto>(user);
+            return CustomApiResponse<UserDto.UserGetDto>.Success(StatusCodes.Status201Created, mappedDto, AuthenticationMessages.SuccessRegister);
         }
 
         [ValidationAspect(typeof(UserDtoValidator.ResetPasswordDtoValidator))]

@@ -38,6 +38,45 @@ namespace Authentication.Business.Validations
             }
         }
 
+        public class UserRegisterDtoValidator : AbstractValidator<UserDto.UserRegisterDto>
+        {
+            public UserRegisterDtoValidator()
+            {
+                RuleFor(x => x.FirstName)
+                    .NotNull().NotEmpty().WithMessage(UserMessages.NotEmptyFirstName)
+                    .MinimumLength(2).WithMessage(UserMessages.InvalidFirstNameMinLength)
+                    .MaximumLength(100).WithMessage(UserMessages.InvalidFirstNameMaxLength);
+
+                RuleFor(x => x.LastName)
+                    .NotNull().NotEmpty().WithMessage(UserMessages.NotEmptyLastName)
+                    .MinimumLength(2).WithMessage(UserMessages.InvalidLastNameMinLength)
+                    .MaximumLength(100).WithMessage(UserMessages.InvalidLastNameMaxLength);
+
+                RuleFor(x => x.UserName)
+                    .NotNull().NotEmpty().WithMessage(UserMessages.NotEmptyUserName)
+                    .MinimumLength(2).WithMessage(UserMessages.InvalidUserNameMinLength)
+                    .MaximumLength(100).WithMessage(UserMessages.InvalidUserNameMaxLength);
+
+                RuleFor(x => x.Email)
+                    .NotNull().NotEmpty().WithMessage(UserMessages.NotEmptyEmail)
+                    .EmailAddress().WithMessage(UserMessages.InvalidEmailFormat)
+                    .MaximumLength(100).WithMessage(UserMessages.InvalidEmailMaxLength);
+
+                RuleFor(x => x.Phone)
+                    .NotNull().NotEmpty().WithMessage(UserMessages.NotEmptyPhoneNumber)
+                    .Length(15).WithMessage(UserMessages.InvalidPhoneNumberLength);
+
+                RuleFor(x => x.Password)
+                    .NotNull().NotEmpty().WithMessage(UserMessages.NotEmptyPassword)
+                    .Must(x => x.ContainDigit()).WithMessage(UserMessages.PasswordContainDigit)
+                    .Must(x => x.ContainLowerCase()).WithMessage(UserMessages.PasswordContainLowerCase)
+                    .Must(x => x.ContainUpperCase()).WithMessage(UserMessages.PasswordContainUpperCase)
+                    .Must(x => x.ContainSpecialCharacter()).WithMessage(UserMessages.PasswordContainSpecialCharacter)
+                    .MinimumLength(8).WithMessage(UserMessages.InvalidPasswordMinLength)
+                    .MaximumLength(25).WithMessage(UserMessages.InvalidPasswordMaxLength);
+            }
+        }
+
         public class UserPutDtoValidator : AbstractValidator<UserDto.UserPutDto>
         {
             public UserPutDtoValidator()
