@@ -29,6 +29,7 @@ namespace Authentication.Model.Dtos
 
         public class UserPutDto : IDto
         {
+            public long Id { get; set; }
             public string FirstName { get; set; } = string.Empty;
             public string LastName { get; set; } = string.Empty;
             public string UserName { get; set; } = string.Empty;
