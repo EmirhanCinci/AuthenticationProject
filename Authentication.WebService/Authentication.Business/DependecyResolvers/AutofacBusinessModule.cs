@@ -31,6 +31,7 @@ namespace Authentication.Business.DependecyResolvers
             builder.RegisterType<FileHelper>();
 
             builder.RegisterType<AuthenticationService>().As<IAuthenticationService>();
+            builder.RegisterType<UserService>().As<IUserService>();
 
             builder.RegisterType<EmailService>().As<IEmailService>();
 
