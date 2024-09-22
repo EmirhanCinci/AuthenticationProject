@@ -3,8 +3,8 @@ using Authentication.Business.Constants;
 using Authentication.Business.Interfaces;
 using Authentication.Business.Profiles;
 using Authentication.Business.Utilities.Email;
-using Authentication.Business.Utilities.Security.Dtos;
-using Authentication.Business.Utilities.Security.Interfaces;
+using Authentication.Business.Utilities.Security.Jwt.Dtos;
+using Authentication.Business.Utilities.Security.Jwt.Interfaces;
 using Authentication.Business.Validations;
 using Authentication.DataAccess.Implementations.EntityFrameworkCore.Contexts;
 using Authentication.DataAccess.Interfaces;
@@ -27,7 +27,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Authentication.Business.Implementations
 {
-    [DtoNullCheckAspect]
+	[DtoNullCheckAspect]
     [PerformanceAspect(5)]
     public class AuthenticationService : IAuthenticationService
     {
@@ -128,7 +128,8 @@ namespace Authentication.Business.Implementations
         }
 
         [ValidationAspect(typeof(UserDtoValidator.UserRegisterDtoValidator))]
-        public async Task<CustomApiResponse<UserDto.UserGetDto>> RegisterAsync(UserDto.UserRegisterDto dto)
+		[TransactionScopeAspect]
+		public async Task<CustomApiResponse<UserDto.UserGetDto>> RegisterAsync(UserDto.UserRegisterDto dto)
         {
             await _userBusinessRules.AddUniqueControlAsync(dto);
             var user = CustomObjectMapper.Mapper.Map<User>(dto);
@@ -136,10 +137,12 @@ namespace Authentication.Business.Implementations
             user.LastName = dto.LastName.ToUpper();
             (user.PasswordHash, user.PasswordSalt) = PasswordHelper.CreatePasswordByHmacSha512(dto.Password);
             var inserted = await _userRepository.AddAsync(user);
-            await _passwordHistoryRepository.AddAsync(new PasswordHistory { UserId = inserted.Id, PasswordHash = inserted.PasswordHash, PasswordSalt = inserted.PasswordSalt });
+			await _unitOfWork.CommitAsync();
+			await _passwordHistoryRepository.AddAsync(new PasswordHistory { UserId = inserted.Id, PasswordHash = inserted.PasswordHash, PasswordSalt = inserted.PasswordSalt });
+			await _unitOfWork.CommitAsync();
+            throw new BadRequestException("hata");
             var mailResponse = await _emailService.SendEmailAsync(new EmailDto.EmailPostDto { ReceiverEmail = dto.Email, Subject = EmailTemplate.PasswordTitle, Body = EmailTemplate.RegisterEmailTemplate(user.FirstName, user.LastName) });
             var result = mailResponse.IsSuccess ? true : throw new Exception(SystemMessages.InternalServerError);
-            await _unitOfWork.CommitAsync();
             var mappedDto = CustomObjectMapper.Mapper.Map<UserDto.UserGetDto>(user);
             return CustomApiResponse<UserDto.UserGetDto>.Success(StatusCodes.Status201Created, mappedDto, AuthenticationMessages.SuccessRegister);
         }
@@ -155,10 +158,12 @@ namespace Authentication.Business.Implementations
             {
                 var lastPassword = passwordHistories.Last();
                 await _passwordHistoryRepository.DeleteAsync(lastPassword);
+                await _unitOfWork.CommitAsync();
             }
             (user.PasswordHash, user.PasswordSalt) = PasswordHelper.CreatePasswordByHmacSha512(dto.NewPassword);
             await _passwordHistoryRepository.AddAsync(new PasswordHistory { UserId = user.Id, PasswordHash = user.PasswordHash, PasswordSalt = user.PasswordSalt });
-            (user.PasswordHash, user.PasswordSalt) = PasswordHelper.CreatePasswordByHmacSha512(dto.NewPassword);
+			await _unitOfWork.CommitAsync();
+			(user.PasswordHash, user.PasswordSalt) = PasswordHelper.CreatePasswordByHmacSha512(dto.NewPassword);
             await _resetPasswordRequestRepository.DeleteAsync(resetRequest);
             await _unitOfWork.CommitAsync();
             await _userRepository.UpdateAsync(user);

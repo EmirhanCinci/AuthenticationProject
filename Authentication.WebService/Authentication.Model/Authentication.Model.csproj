@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cinctruct.Infrastructure" Version="1.0.1" />
+    <PackageReference Include="Cinctruct.Infrastructure" Version="1.0.2" />
   </ItemGroup>
 
 </Project>

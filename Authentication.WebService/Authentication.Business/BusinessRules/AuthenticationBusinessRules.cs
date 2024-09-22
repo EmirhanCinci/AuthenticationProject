@@ -1,6 +1,7 @@
 ﻿namespace Authentication.Business.BusinessRules
 {
-    internal class AuthenticationBusinessRules
+    public class AuthenticationBusinessRules
     {
+
     }
 }

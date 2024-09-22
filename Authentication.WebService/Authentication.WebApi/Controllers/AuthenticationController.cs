@@ -1,5 +1,5 @@
 ﻿using Authentication.Business.Interfaces;
-using Authentication.Business.Utilities.Security.Dtos;
+using Authentication.Business.Utilities.Security.Jwt.Dtos;
 using Authentication.Model.Dtos;
 using Infrastructure.Utilities.Responses;
 using Infrastructure.WebApi.Controllers;
@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Authentication.WebApi.Controllers
 {
-    public class AuthenticationController : BaseController
+	public class AuthenticationController : BaseController
     {
         private readonly IAuthenticationService _authenticationService;
         public AuthenticationController(IAuthenticationService authenticationService)

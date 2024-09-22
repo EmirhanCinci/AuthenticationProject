@@ -1,10 +1,10 @@
-﻿using Authentication.Business.Utilities.Security.Dtos;
+﻿using Authentication.Business.Utilities.Security.Jwt.Dtos;
 using Authentication.Model.Dtos;
 using Infrastructure.Utilities.Responses;
 
 namespace Authentication.Business.Interfaces
 {
-    public interface IAuthenticationService
+	public interface IAuthenticationService
     {
         Task<CustomApiResponse<TokenDto>> LoginAsync(UserDto.LoginDto dto);
         Task<CustomApiResponse<TokenDto>> CreateTokenByRefreshTokenAsync(UserRefreshTokenDto dto);

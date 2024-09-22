@@ -1,4 +1,4 @@
-﻿using Authentication.Business.Utilities.Security.Dtos;
+﻿using Authentication.Business.Utilities.Security.Jwt.Dtos;
 using Infrastructure.Utilities.Security.Encyption;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace Authentication.WebApi
 {
-    public static class WebApiServiceRegistration
+	public static class WebApiServiceRegistration
     {
         public static IServiceCollection AddWebApiServices(this IServiceCollection services, IConfiguration configuration)
         {
