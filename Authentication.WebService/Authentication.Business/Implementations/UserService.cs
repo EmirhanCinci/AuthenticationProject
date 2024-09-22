@@ -47,7 +47,8 @@ namespace Authentication.Business.Implementations
 
         [DtoNullCheckAspect]
         [ValidationAspect(typeof(UserDtoValidator.UserPostDtoValidator))]
-        public async Task<CustomApiResponse<UserDto.UserGetDto>> AddAsync(UserDto.UserPostDto dto)
+		[TransactionScopeAspect]
+		public async Task<CustomApiResponse<UserDto.UserGetDto>> AddAsync(UserDto.UserPostDto dto)
         {
             await _userBusinessRules.AddUniqueControlAsync(dto);
             var user = CustomObjectMapper.Mapper.Map<User>(dto);
@@ -56,6 +57,7 @@ namespace Authentication.Business.Implementations
             var password = PasswordGenerator.GeneratePassword();
             (user.PasswordHash, user.PasswordSalt) = PasswordHelper.CreatePasswordByHmacSha512(password);
             var inserted = await _userRepository.AddAsync(user);
+            await _unitOfWork.CommitAsync();
             await _passwordHistoryRepository.AddAsync(new PasswordHistory { UserId = inserted.Id, PasswordHash = user.PasswordHash, PasswordSalt = user.PasswordSalt });
             var mailResponse = await _emailService.SendEmailAsync(new EmailDto.EmailPostDto { ReceiverEmail = dto.Email, Subject = EmailTemplate.PasswordTitle, Body = EmailTemplate.PasswordEmailTemplate(user.FirstName, user.LastName, user.UserName, user.Email, password) });
             var result = mailResponse.IsSuccess ? true : throw new Exception(SystemMessages.InternalServerError);

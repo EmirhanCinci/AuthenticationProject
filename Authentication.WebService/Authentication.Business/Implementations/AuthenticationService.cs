@@ -29,7 +29,7 @@ namespace Authentication.Business.Implementations
 {
 	[DtoNullCheckAspect]
     [PerformanceAspect(5)]
-    public class AuthenticationService : IAuthenticationService
+	public class AuthenticationService : IAuthenticationService
     {
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepository;
@@ -56,7 +56,8 @@ namespace Authentication.Business.Implementations
         }
 
         [ValidationAspect(typeof(UserDtoValidator.ChangePasswordDtoValidator))]
-        public async Task<CustomApiResponse<NoData>> ChangePasswordAsync(UserDto.ChangePasswordDto dto)
+		[TransactionScopeAspect]
+		public async Task<CustomApiResponse<NoData>> ChangePasswordAsync(UserDto.ChangePasswordDto dto)
         {
             var user = await _userRepository.GetByIdAsync(dto.UserId, false, false, default) ?? throw new BadRequestException(UserMessages.NotFoundById);
             var isValidPassword = PasswordHelper.VerifyPasswordHashByHmacSha512(dto.OldPassword, user.PasswordHash, user.PasswordSalt) ? true : throw new BadRequestException(AuthenticationMessages.TryControlNewPassword);
@@ -140,7 +141,6 @@ namespace Authentication.Business.Implementations
 			await _unitOfWork.CommitAsync();
 			await _passwordHistoryRepository.AddAsync(new PasswordHistory { UserId = inserted.Id, PasswordHash = inserted.PasswordHash, PasswordSalt = inserted.PasswordSalt });
 			await _unitOfWork.CommitAsync();
-            throw new BadRequestException("hata");
             var mailResponse = await _emailService.SendEmailAsync(new EmailDto.EmailPostDto { ReceiverEmail = dto.Email, Subject = EmailTemplate.PasswordTitle, Body = EmailTemplate.RegisterEmailTemplate(user.FirstName, user.LastName) });
             var result = mailResponse.IsSuccess ? true : throw new Exception(SystemMessages.InternalServerError);
             var mappedDto = CustomObjectMapper.Mapper.Map<UserDto.UserGetDto>(user);
@@ -148,7 +148,8 @@ namespace Authentication.Business.Implementations
         }
 
         [ValidationAspect(typeof(UserDtoValidator.ResetPasswordDtoValidator))]
-        public async Task<CustomApiResponse<NoData>> ResetPasswordAsync(UserDto.ResetPasswordDto dto)
+		[TransactionScopeAspect]
+		public async Task<CustomApiResponse<NoData>> ResetPasswordAsync(UserDto.ResetPasswordDto dto)
         {
             var resetRequest = await _resetPasswordRequestRepository.GetAsync(prd => prd.ResetCode == dto.Code && prd.ExpirationDate >= DateTime.Now && prd.IsDeleted == false) ?? throw new BadRequestException(AuthenticationMessages.InvalidForgotPasswordRequest); ;
             var user = await _userRepository.GetByIdAsync(resetRequest.UserId, false, false, default) ?? throw new BadRequestException(UserMessages.NotFoundById);
