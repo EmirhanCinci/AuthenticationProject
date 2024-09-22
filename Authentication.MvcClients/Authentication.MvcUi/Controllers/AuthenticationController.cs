@@ -19,19 +19,22 @@ namespace Authentication.MvcUi.Controllers
             _httpApiService = httpApiService;
         }
 
+        [AuthenticationFilter]
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
-        [HttpGet]
+		[AuthenticationFilter]
+		[HttpGet]
         public IActionResult ForgotPassword()
         {
             return View();
         }
 
-        [HttpGet]
+		[AuthenticationFilter]
+		[HttpGet]
         public async Task<IActionResult> ResetPassword(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -48,13 +51,15 @@ namespace Authentication.MvcUi.Controllers
             return View();
         }
 
-        [HttpGet]
+		[AuthenticationFilter]
+		[HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
-        [HttpPost]
+		[AuthenticationFilter]
+		[HttpPost]
         public async Task<IActionResult> Login(UserRequest.LoginRequest dto)
         {
             var response = await _httpApiService.PostDataAsync<ResponseBody<TokenResponse>>("BaseAddress", "/Authentication/Login", JsonSerializer.Serialize(dto));
@@ -69,21 +74,24 @@ namespace Authentication.MvcUi.Controllers
             }
         }
 
-        [HttpPost]
+		[AuthenticationFilter]
+		[HttpPost]
         public async Task<IActionResult> ForgotPassword(UserRequest.ForgotPasswordRequest dto)
         {
             var response = await _httpApiService.PostDataAsync<ResponseBody<NoData>>("BaseAddress", "/Authentication/ForgotPassword", JsonSerializer.Serialize(dto));
             return Json(response);
         }
 
-        [HttpPost]
+		[AuthenticationFilter]
+		[HttpPost]
         public async Task<IActionResult> ResetPassword(UserRequest.ResetPasswordRequest dto)
         {
             var response = await _httpApiService.PostDataAsync<ResponseBody<NoData>>("BaseAddress", "/Authentication/ResetPassword", JsonSerializer.Serialize(dto));
             return Json(response);
         }
 
-        [HttpPost]
+		[AuthenticationFilter]
+		[HttpPost]
         public async Task<IActionResult> Register(UserRequest.UserRegisterRequest dto)
         {
             var response = await _httpApiService.PostDataAsync<ResponseBody<UserResponse>>("BaseAddress", "/Authentication/Register", JsonSerializer.Serialize(dto));

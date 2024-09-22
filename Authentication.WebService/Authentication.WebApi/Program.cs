@@ -35,5 +35,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.UseCustomException();
 
 app.Run();
