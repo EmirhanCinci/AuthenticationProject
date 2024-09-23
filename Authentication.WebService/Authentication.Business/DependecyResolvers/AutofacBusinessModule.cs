@@ -26,15 +26,18 @@ namespace Authentication.Business.DependecyResolvers
             builder.RegisterType<EfUserRefreshTokenRepository>().As<IUserRefreshTokenRepository>();
             builder.RegisterType<EfUserRepository>().As<IUserRepository>();
             builder.RegisterType<EfRoleRepository>().As<IRoleRepository>();
+            builder.RegisterType<EfUserRoleRepository>().As<IUserRoleRepository>();
 
             builder.RegisterType<AuthenticationBusinessRules>();
             builder.RegisterType<UserBusinessRules>();
             builder.RegisterType<RoleBusinessRules>();
+            builder.RegisterType<UserRoleBusinessRules>();
             builder.RegisterType<FileHelper>();
 
             builder.RegisterType<AuthenticationService>().As<IAuthenticationService>();
             builder.RegisterType<UserService>().As<IUserService>();
             builder.RegisterType<RoleService>().As<IRoleService>();
+            builder.RegisterType<UserRoleService>().As<IUserRoleService>();
 
             builder.RegisterType<EmailService>().As<IEmailService>();
 

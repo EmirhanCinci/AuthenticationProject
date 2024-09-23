@@ -10,6 +10,7 @@ namespace Authentication.Business.Profiles
             {
                 config.AddProfile<UserProfile>();
                 config.AddProfile<RoleProfile>();
+                config.AddProfile<UserRoleProfile>();
             });
             return configuration.CreateMapper();
         });
