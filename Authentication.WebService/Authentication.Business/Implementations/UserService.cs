@@ -1,4 +1,5 @@
-﻿using Authentication.Business.BusinessRules;
+﻿using Authentication.Business.Aspects;
+using Authentication.Business.BusinessRules;
 using Authentication.Business.Constants;
 using Authentication.Business.Interfaces;
 using Authentication.Business.Profiles;
@@ -47,7 +48,8 @@ namespace Authentication.Business.Implementations
 
         [DtoNullCheckAspect]
         [ValidationAspect(typeof(UserDtoValidator.UserPostDtoValidator))]
-		[TransactionScopeAspect]
+        [SecuredOperationAspect("Admin,Admin Create")]
+        [TransactionScopeAspect]
 		public async Task<CustomApiResponse<UserDto.UserGetDto>> AddAsync(UserDto.UserPostDto dto)
         {
             await _userBusinessRules.AddUniqueControlAsync(dto);
@@ -67,6 +69,7 @@ namespace Authentication.Business.Implementations
         }
 
         [IdCheckAspect]
+        [SecuredOperationAspect("Admin,Admin Delete")]
         public async Task<CustomApiResponse<NoData>> DeleteAsync(long id, bool permanent = false)
         {
             var user = await _userRepository.GetByIdAsync(id, false, false, default) ?? throw new BadRequestException(UserMessages.NotFoundById);
@@ -75,7 +78,8 @@ namespace Authentication.Business.Implementations
             return CustomApiResponse<NoData>.Success(StatusCodes.Status200OK, UserMessages.DeletedUser);
         }
 
-        [IdCheckAspect] 
+        [IdCheckAspect]
+        [SecuredOperationAspect("Admin,Admin Read")]
         public async Task<CustomApiResponse<UserDto.UserGetDto>> GetByIdAsync(long id, params string[] includeList)
         {
             var user = await _userRepository.GetByIdAsync(id, false, false, default, includeList) ?? throw new BadRequestException(UserMessages.NotFoundById);
@@ -84,6 +88,7 @@ namespace Authentication.Business.Implementations
         }
 
         [DtoNullCheckAspect]
+        [SecuredOperationAspect("Admin,Admin Read")]
         public async Task<CustomApiResponse<Paginate<UserDto.UserGetDto>>> GetListAsync(UserDto.UserFilterDto dto, params string[] includeList)
         {
             var queryable = _userRepository.Queryable(prd => (!dto.IsBlocked.HasValue || prd.IsBlocked == dto.IsBlocked) && (!dto.IsTwoFactorEnabled.HasValue || prd.IsTwoFactorEnabled == dto.IsTwoFactorEnabled), false, dto.IsDeleted, includeList);
@@ -94,6 +99,7 @@ namespace Authentication.Business.Implementations
 
         [DtoNullCheckAspect]
         [ValidationAspect(typeof(UserDtoValidator.UserPutDtoValidator))]
+        [SecuredOperationAspect("Admin,Admin Update")]
         public async Task<CustomApiResponse<NoData>> UpdateAsync(UserDto.UserPutDto dto)
         {
             await _userBusinessRules.UpdateUniqueControlAsync(dto);

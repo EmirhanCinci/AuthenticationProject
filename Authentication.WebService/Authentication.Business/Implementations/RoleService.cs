@@ -1,4 +1,5 @@
-﻿using Authentication.Business.BusinessRules;
+﻿using Authentication.Business.Aspects;
+using Authentication.Business.BusinessRules;
 using Authentication.Business.Constants;
 using Authentication.Business.Interfaces;
 using Authentication.Business.Profiles;
@@ -39,6 +40,7 @@ namespace Authentication.Business.Implementations
 
         [DtoNullCheckAspect]
         [ValidationAspect(typeof(RoleDtoValidator.RolePostDtoValidator))]
+        [SecuredOperationAspect("Admin,Admin Create")]
         public async Task<CustomApiResponse<RoleDto.RoleGetDto>> AddAsync(RoleDto.RolePostDto dto)
         {
             await _roleBusinessRules.AddUniqueControlAsync(dto);
@@ -51,6 +53,7 @@ namespace Authentication.Business.Implementations
         }
 
         [IdCheckAspect]
+        [SecuredOperationAspect("Admin,Admin Delete")]
         public async Task<CustomApiResponse<NoData>> DeleteAsync(int id, bool permanent = false)
         {
             var role = await _roleRepository.GetByIdAsync(id, false, false, default) ?? throw new BadRequestException(RoleMessages.NotFoundById);
@@ -60,6 +63,7 @@ namespace Authentication.Business.Implementations
         }
 
         [IdCheckAspect]
+        [SecuredOperationAspect("Admin,Admin Read")]
         public async Task<CustomApiResponse<RoleDto.RoleGetDto>> GetByIdAsync(int id, params string[] includeList)
         {
             var role = await _roleRepository.GetByIdAsync(id, false, false, default, includeList) ?? throw new BadRequestException(RoleMessages.NotFoundById);
@@ -68,6 +72,7 @@ namespace Authentication.Business.Implementations
         }
 
         [DtoNullCheckAspect]
+        [SecuredOperationAspect("Admin,Admin Read")]
         public async Task<CustomApiResponse<List<RoleDto.RoleGetDto>>> GetListAsync(RoleDto.RoleFilterDto dto, params string[] includeList)
         {
             var queryable = _roleRepository.Queryable(null, false, dto.IsDeleted, includeList);
@@ -78,6 +83,7 @@ namespace Authentication.Business.Implementations
 
         [DtoNullCheckAspect]
         [ValidationAspect(typeof(RoleDtoValidator.RolePutDtoValidator))]
+        [SecuredOperationAspect("Admin,Admin Update")]
         public async Task<CustomApiResponse<NoData>> UpdateAsync(RoleDto.RolePutDto dto)
         {
             await _roleBusinessRules.UpdateUniqueControlAsync(dto);

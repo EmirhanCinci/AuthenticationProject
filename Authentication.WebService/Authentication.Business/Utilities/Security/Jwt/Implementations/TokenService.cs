@@ -16,9 +16,11 @@ namespace Authentication.Business.Utilities.Security.Jwt.Implementations
 	{
 		private readonly TokenOption _tokenOption;
 		private readonly IUserRepository _userRepository;
-		public TokenService(IUserRepository userRepository, IOptions<TokenOption> options)
+		private readonly IUserRoleRepository _userRoleRepository;
+		public TokenService(IUserRepository userRepository, IUserRoleRepository userRoleRepository, IOptions<TokenOption> options)
 		{
 			_userRepository = userRepository;
+			_userRoleRepository = userRoleRepository;
 			_tokenOption = options.Value;
 		}
 
@@ -34,12 +36,14 @@ namespace Authentication.Business.Utilities.Security.Jwt.Implementations
 
 		private IEnumerable<Claim> SetClaims(User user, List<string> audiences)
 		{
+			var userRoles = _userRoleRepository.Queryable(prd => prd.UserId == user.Id, false, false, "Role").ToList();
 			var claims = new List<Claim>();
 			claims.AddNameIdentifier(user.Id.ToString());
 			claims.AddEmail(user.Email);
 			claims.AddName(user.UserName);
 			claims.AddRange(audiences.Select(x => new Claim(JwtRegisteredClaimNames.Aud, x)));
-			return claims;
+            claims.AddRoles(userRoles.Select(c => c.Role.Name).ToArray());
+            return claims;
 		}
 
 		public TokenDto CreateToken(User user)

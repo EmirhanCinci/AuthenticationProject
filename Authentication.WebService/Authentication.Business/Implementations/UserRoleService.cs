@@ -1,4 +1,5 @@
-﻿using Authentication.Business.BusinessRules;
+﻿using Authentication.Business.Aspects;
+using Authentication.Business.BusinessRules;
 using Authentication.Business.Constants;
 using Authentication.Business.Interfaces;
 using Authentication.Business.Profiles;
@@ -40,6 +41,7 @@ namespace Authentication.Business.Implementations
 
         [DtoNullCheckAspect]
         [ValidationAspect(typeof(UserRoleDtoValidator.UserRolePostAndPutDtoValidator))]
+        [SecuredOperationAspect("Admin,Admin Create,Admin Delete,Admin Update")]
         [TransactionScopeAspect]
         public async Task<CustomApiResponse<NoData>> AddOrUpdateAsync(UserRoleDto.UserRolePostAndPutDto dto)
         {
@@ -69,6 +71,7 @@ namespace Authentication.Business.Implementations
         }
 
         [DtoNullCheckAspect]
+        [SecuredOperationAspect("Admin,Admin Read")]
         public async Task<CustomApiResponse<Paginate<UserRoleDto.UserRoleGetDto>>> GetListAsync(UserRoleDto.UserRoleFilterDto dto, params string[] includeList)
         {
             var queryable = _userRoleRepository.Queryable(prd => (!dto.UserId.HasValue || prd.UserId == dto.UserId) && (!dto.RoleId.HasValue || prd.RoleId == dto.RoleId), false, dto.IsDeleted, includeList);
