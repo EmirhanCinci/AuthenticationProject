@@ -9,6 +9,7 @@ namespace Authentication.Business.Profiles
             var configuration = new MapperConfiguration(config =>
             {
                 config.AddProfile<UserProfile>();
+                config.AddProfile<RoleProfile>();
             });
             return configuration.CreateMapper();
         });
