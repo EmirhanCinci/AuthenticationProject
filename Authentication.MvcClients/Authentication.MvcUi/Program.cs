@@ -1,5 +1,6 @@
 using Authentication.MvcUi.ApiServices.Implmentations;
 using Authentication.MvcUi.ApiServices.Interfaces;
+using Authentication.MvcUi.Filters;
 using Authentication.MvcUi.Middlewares;
 
 namespace Authentication.MvcUi
@@ -16,6 +17,8 @@ namespace Authentication.MvcUi
             builder.Services.AddSession();
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddHttpClient();
+
+            builder.Services.AddScoped<SessionFilter>();
             builder.Services.AddScoped<IHttpApiService, HttpApiService>();
 
             var app = builder.Build();
