@@ -1,4 +1,5 @@
 ﻿using Castle.DynamicProxy;
+using Infrastructure.CrossCuttingConcerns.Exceptions;
 using Infrastructure.Extensions;
 using Infrastructure.Utilities.Interceptors;
 using Infrastructure.Utilities.IoC;
@@ -28,7 +29,8 @@ namespace Authentication.Business.Aspects
                     return;
                 }
             }
-            throw new Exception("Yetkiniz yok.");
+            throw new BadRequestException("Yetkiniz yok.");
         }
     }
+
 }

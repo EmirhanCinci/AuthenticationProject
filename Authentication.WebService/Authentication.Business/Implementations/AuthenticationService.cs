@@ -1,4 +1,5 @@
-﻿using Authentication.Business.BusinessRules;
+﻿using Authentication.Business.Aspects;
+using Authentication.Business.BusinessRules;
 using Authentication.Business.Constants;
 using Authentication.Business.Interfaces;
 using Authentication.Business.Profiles;
@@ -27,7 +28,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Authentication.Business.Implementations
 {
-	[DtoNullCheckAspect]
+    [MaintenanceModeAspect]
+    [BlacklistIpAspect("::1")]
+    [DtoNullCheckAspect]
     [PerformanceAspect(5)]
 	public class AuthenticationService : IAuthenticationService
     {

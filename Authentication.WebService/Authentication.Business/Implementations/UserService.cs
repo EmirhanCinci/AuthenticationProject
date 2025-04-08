@@ -25,6 +25,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Authentication.Business.Implementations
 {
+    [MaintenanceModeAspect]
+    [BlacklistIpAspect("::1")]
     [PerformanceAspect(5)]
     public class UserService : IUserService
     {
